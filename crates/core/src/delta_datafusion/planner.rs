@@ -36,13 +36,14 @@ use datafusion_expr::LogicalPlan;
 use crate::delta_datafusion::DataFusionResult;
 
 /// Deltaplanner
-pub struct DeltaPlanner<T: ExtensionPlanner> {
+#[derive(Debug)]
+pub struct DeltaPlanner<T: ExtensionPlanner + std::fmt::Debug> {
     /// custom extension planner
     pub extension_planner: T,
 }
 
 #[async_trait]
-impl<T: ExtensionPlanner + Send + Sync + 'static + Clone> QueryPlanner for DeltaPlanner<T> {
+impl<T: ExtensionPlanner + Send + Sync + 'static + Clone + std::fmt::Debug> QueryPlanner for DeltaPlanner<T> {
     async fn create_physical_plan(
         &self,
         logical_plan: &LogicalPlan,

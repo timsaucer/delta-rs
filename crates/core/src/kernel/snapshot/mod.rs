@@ -223,8 +223,7 @@ impl Snapshot {
             &StructType::new(
                 schema_actions
                     .iter()
-                    .map(|a| a.schema_field().clone())
-                    .collect(),
+                    .map(|a| a.schema_field().clone()),
             ),
             &self.config,
         );
@@ -236,7 +235,6 @@ impl Snapshot {
                 schema_actions
                     .iter()
                     .map(|a| a.schema_field().clone())
-                    .collect(),
             ),
             &self.config,
         )?;
@@ -464,7 +462,6 @@ impl EagerSnapshot {
                 schema_actions
                     .iter()
                     .map(|a| a.schema_field().clone())
-                    .collect(),
             );
             new_slice
                 .checkpoint_stream(
@@ -480,7 +477,6 @@ impl EagerSnapshot {
             schema_actions
                 .iter()
                 .map(|a| a.schema_field().clone())
-                .collect(),
         );
         let log_stream = new_slice.commit_stream(
             log_store.object_store().clone(),
@@ -622,7 +618,6 @@ impl EagerSnapshot {
             schema_actions
                 .iter()
                 .map(|a| a.schema_field().clone())
-                .collect(),
         );
         let actions = self.snapshot.log_segment.advance(
             send,
@@ -712,7 +707,7 @@ fn stats_schema(schema: &StructType, config: TableConfig<'_>) -> DeltaResult<Str
         StructField::new("maxValues", StructType::new(stats_fields.clone()), true),
         StructField::new(
             "nullCount",
-            StructType::new(stats_fields.iter().filter_map(to_count_field).collect()),
+            StructType::new(stats_fields.iter().filter_map(to_count_field)),
             true,
         ),
     ]))
@@ -752,7 +747,6 @@ fn stats_field(idx: usize, num_indexed_cols: i32, field: &StructField) -> Option
                 dt_struct
                     .fields()
                     .flat_map(|f| stats_field(idx, num_indexed_cols, f))
-                    .collect(),
             ),
             true,
         )),

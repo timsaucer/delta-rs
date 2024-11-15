@@ -58,7 +58,7 @@ use futures::future::join_all;
 use pyo3::exceptions::{PyRuntimeError, PyValueError};
 use pyo3::prelude::*;
 use pyo3::pybacked::PyBackedStr;
-use pyo3::types::{PyDict, PyFrozenSet};
+use pyo3::types::{PyDict, PyFrozenSet, PyList};
 use serde_json::{Map, Value};
 
 use crate::error::DeltaProtocolError;
@@ -1438,6 +1438,13 @@ fn scalar_to_py<'py>(value: &Scalar, py_date: &Bound<'py, PyAny>) -> PyResult<Bo
                 py_struct.set_item(field.name(), scalar_to_py(value, py_date)?)?;
             }
             py_struct.to_object(py)
+        }
+        Array(_) => {
+            // These values will be removed per https://github.com/delta-incubator/delta-kernel-rs/issues/291
+            // So for now just create an empty array.
+            let v: &[i32] = &[];
+            let py_array = PyList::new_bound(py, v);
+            py_array.to_object(py)
         }
     };
 
