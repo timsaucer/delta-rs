@@ -6,7 +6,7 @@ use datafusion_expr::logical_plan::LogicalPlan;
 use datafusion_expr::{Expr, UserDefinedLogicalNodeCore};
 
 /// Delta Lake specific operations
-#[derive(Clone, PartialEq, Eq, Hash)]
+#[derive(Clone, PartialEq, Eq, Hash, PartialOrd, Ord)]
 pub enum DeltaStatement {
     /// Get provenance information, including the operation,
     /// user, and so on, for each write to a table.
@@ -145,6 +145,27 @@ impl Vacuum {
     }
 }
 
+impl PartialOrd for Vacuum {
+    fn partial_cmp(&self, other: &Self) -> Option<std::cmp::Ordering> {
+        Some(self.cmp(&other))
+    }
+}
+impl Ord for Vacuum {
+    fn cmp(&self, other: &Self) -> std::cmp::Ordering {
+        let table_cmp = self.table.cmp(&other.table);
+        if std::cmp::Ordering::Equal != table_cmp {
+            return table_cmp;
+        }
+
+        let retention_cmp = self.retention_hours.cmp(&other.retention_hours);
+        if std::cmp::Ordering::Equal != retention_cmp {
+            return retention_cmp;
+        }
+
+        self.dry_run.cmp(&other.dry_run)
+    }
+}
+
 /// Logical Plan for [DescribeHistory] operation.
 ///
 /// [DescribeHistory]: https://learn.microsoft.com/en-us/azure/databricks/sql/language-manual/delta-describe-history
@@ -167,6 +188,18 @@ impl DescribeHistory {
     }
 }
 
+
+impl PartialOrd for DescribeHistory {
+    fn partial_cmp(&self, other: &Self) -> Option<std::cmp::Ordering> {
+        self.table.partial_cmp(&other.table)
+    }
+}
+impl Ord for DescribeHistory {
+    fn cmp(&self, other: &Self) -> std::cmp::Ordering {
+        self.table.cmp(&other.table)
+    }
+}
+
 /// Logical Plan for DescribeDetails operation.
 #[derive(Clone, PartialEq, Eq, Hash)]
 pub struct DescribeDetails {
@@ -186,6 +219,17 @@ impl DescribeDetails {
     }
 }
 
+impl PartialOrd for DescribeDetails {
+    fn partial_cmp(&self, other: &Self) -> Option<std::cmp::Ordering> {
+        self.table.partial_cmp(&other.table)
+    }
+}
+impl Ord for DescribeDetails {
+    fn cmp(&self, other: &Self) -> std::cmp::Ordering {
+        self.table.cmp(&other.table)
+    }
+}
+
 /// Logical Plan for DescribeFiles operation.
 #[derive(Clone, PartialEq, Eq, Hash)]
 pub struct DescribeFiles {
@@ -202,6 +246,17 @@ impl DescribeFiles {
             // TODO: add proper schema
             schema: Arc::new(DFSchema::empty()),
         }
+    }
+}
+
+impl PartialOrd for DescribeFiles {
+    fn partial_cmp(&self, other: &Self) -> Option<std::cmp::Ordering> {
+        self.table.partial_cmp(&other.table)
+    }
+}
+impl Ord for DescribeFiles {
+    fn cmp(&self, other: &Self) -> std::cmp::Ordering {
+        self.table.cmp(&other.table)
     }
 }
 
