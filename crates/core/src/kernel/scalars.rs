@@ -270,7 +270,7 @@ impl ScalarExt for Scalar {
             Self::Binary(val) => Value::String(create_escaped_binary_string(val.as_slice())),
             Self::Null(_) => Value::Null,
             Self::Struct(_) => unimplemented!(),
-            Self::Array(value) => unimplemented!(), // https://github.com/delta-incubator/delta-kernel-rs/issues/291
+            Self::Array(_) => unimplemented!(), // https://github.com/delta-incubator/delta-kernel-rs/issues/291
         }
     }
 }
