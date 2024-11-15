@@ -76,7 +76,7 @@ impl ActionFactory {
             schema
                 .fields()
                 .filter(|f| !partition_columns.contains(f.name()))
-                .cloned()
+                .cloned(),
         );
 
         let batch = DataFactory::record_batch(&data_schema, 10, &bounds).unwrap();

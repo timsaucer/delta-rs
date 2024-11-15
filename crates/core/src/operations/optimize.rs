@@ -1245,7 +1245,7 @@ pub(super) mod zorder {
 
                 let memory_pool = FairSpillPool::new(max_spill_size);
                 let config = RuntimeConfig::new().with_memory_pool(Arc::new(memory_pool));
-                let runtime = Arc::new(RuntimeEnv::new(config)?);
+                let runtime = Arc::new(RuntimeEnv::try_new(config)?);
                 runtime.register_object_store(&Url::parse("delta-rs://").unwrap(), object_store);
 
                 let ctx = SessionContext::new_with_config_rt(SessionConfig::default(), runtime);

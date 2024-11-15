@@ -43,7 +43,9 @@ pub struct DeltaPlanner<T: ExtensionPlanner + std::fmt::Debug> {
 }
 
 #[async_trait]
-impl<T: ExtensionPlanner + Send + Sync + 'static + Clone + std::fmt::Debug> QueryPlanner for DeltaPlanner<T> {
+impl<T: ExtensionPlanner + Send + Sync + 'static + Clone + std::fmt::Debug> QueryPlanner
+    for DeltaPlanner<T>
+{
     async fn create_physical_plan(
         &self,
         logical_plan: &LogicalPlan,

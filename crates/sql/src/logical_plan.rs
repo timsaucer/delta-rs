@@ -188,7 +188,6 @@ impl DescribeHistory {
     }
 }
 
-
 impl PartialOrd for DescribeHistory {
     fn partial_cmp(&self, other: &Self) -> Option<std::cmp::Ordering> {
         self.table.partial_cmp(&other.table)
